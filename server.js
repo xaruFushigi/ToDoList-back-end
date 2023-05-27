@@ -56,9 +56,34 @@ app.use(function(req, res, next) {
 
 const fetchDataHandler = (req, res) => {
     const { status } = req.query;      //status of main window option value
+    const { checkbox, id } = req.body;     //checkbox value in the list
+    
     let query = 'SELECT * FROM todolist';
     //If a status is 'Incomplete' or 'Complete' and if it is not 'All' 
-    if(status && status !== 'All') { query += ` WHERE status = '${status}'` };
+    if(status && status !== 'All') { 
+        query += ` WHERE status = '${status}'` 
+        if(checkbox) {
+            query = 'UPDATE todolist SET status = $1 WHERE id = $2';
+            if(status === 'Complete') {
+                const values = ['Incomplete', id];
+                const client = pool.connect();
+                const result = client.query(query, values);
+                client.release();
+            }
+            console.log('Row updated');
+        }
+        else if (!checkbox) {
+            query = 'UPDATE todolist SET status = $1 WHERE id = $2';
+            if(status === 'Incomplete'){
+                const values = ['Complete', id];
+                const client = pool.connect();
+                const result = client.query(query, values);
+                client.release();
+            }
+        }
+        else{ console.log('did not update') }
+        }
+    
     //If status is 'All'
     pool.query(query, (error, result) => {
       if (error) {
@@ -68,11 +93,11 @@ const fetchDataHandler = (req, res) => {
       
       return res.status(200).json(result.rows);
     });
-  };
+};
 
 //----------Routes----------------------------//
 app.post('/', (req, res, next) => {RootLink.RootLink(req, res, next)});
-app.get('/database', fetchDataHandler);
+app.post('/database', fetchDataHandler);
 app.delete('/delete', (req, res) => {
     const {id} =req.body;
     DeleteLink(res, id) });
