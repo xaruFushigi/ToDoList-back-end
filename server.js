@@ -5,6 +5,7 @@ const { express,
         app,
         dotenv,
         db,
+        pool,
         cors,
         cookieParser,
         cookieSession,
@@ -16,6 +17,7 @@ const { express,
 
 //---------ROUTES---------------------------------------//
 const RootLink = require('./controllers/Root');
+const { DeleteLink } = require('./controllers/Delete');
 //---------END OF ROUTES--------------------------------//
 
 //---------Middlewear------------------//
@@ -44,9 +46,6 @@ app.use(expressSession({
         saveUninitialized : false
     }
 }));
-// app.use((req, res, next) => {
-//     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate' )
-// });
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // This will allow requests from all domains. You can set it to a specific domain as well.
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -55,8 +54,28 @@ app.use(function(req, res, next) {
 });
 //---------END OF Middlewear------------------//
 
+const fetchDataHandler = (req, res) => {
+    const { status } = req.query;      //status of main window option value
+    let query = 'SELECT * FROM todolist';
+    //If a status is 'Incomplete' or 'Complete' and if it is not 'All' 
+    if(status && status !== 'All') { query += ` WHERE status = '${status}'` };
+    //If status is 'All'
+    pool.query(query, (error, result) => {
+      if (error) {
+        console.error('Error executing query', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
+      
+      return res.status(200).json(result.rows);
+    });
+  };
+
 //----------Routes----------------------------//
 app.post('/', (req, res, next) => {RootLink.RootLink(req, res, next)});
+app.get('/database', fetchDataHandler);
+app.delete('/delete', (req, res) => {
+    const {id} =req.body;
+    DeleteLink(res, id) });
 //----------END OF Routes---------------------//
 
 //Start of server

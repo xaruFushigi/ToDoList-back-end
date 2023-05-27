@@ -54,6 +54,7 @@ module.exports = {
     cookieParser,
     cookieSession,
     csrf,
+    pool,
     csrfProtection,
     sessionStore,
     pgSession,
