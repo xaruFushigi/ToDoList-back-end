@@ -17,7 +17,8 @@ const { express,
 
 //---------ROUTES---------------------------------------//
 const RootLink = require('./controllers/Root');
-const { DeleteLink } = require('./controllers/Delete');
+const  DeleteLink  = require('./controllers/Delete');
+const UpdateLink = require('./controllers/UpdateLink');
 //---------END OF ROUTES--------------------------------//
 
 //---------Middlewear------------------//
@@ -29,7 +30,7 @@ app.use(cors({
     origin: process.env.FRONT_END_URL,
     credentials: true,
     allowedHeaders: ['Content-Type'],
-    methods: ['GET', 'POST', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(expressSession({
     secret : process.env.SESSION_SECRET,
@@ -53,51 +54,31 @@ app.use(function(req, res, next) {
     next();
 });
 //---------END OF Middlewear------------------//
-
 const fetchDataHandler = (req, res) => {
+    console.log(req)
     const { status } = req.query;      //status of main window option value
-    const { checkbox, id } = req.body;     //checkbox value in the list
-    
-    let query = 'SELECT * FROM todolist';
+    const query = status && status !== 'All' 
+                    ? 'SELECT * FROM todolist WHERE status = $1'
+                    : 'SELECT * FROM todolist';
+    const values = status && status !== 'All' ? [status] : [];
     //If a status is 'Incomplete' or 'Complete' and if it is not 'All' 
-    if(status && status !== 'All') { 
-        query += ` WHERE status = '${status}'` 
-        if(checkbox) {
-            query = 'UPDATE todolist SET status = $1 WHERE id = $2';
-            if(status === 'Complete') {
-                const values = ['Incomplete', id];
-                const client = pool.connect();
-                const result = client.query(query, values);
-                client.release();
-            }
-            console.log('Row updated');
-        }
-        else if (!checkbox) {
-            query = 'UPDATE todolist SET status = $1 WHERE id = $2';
-            if(status === 'Incomplete'){
-                const values = ['Complete', id];
-                const client = pool.connect();
-                const result = client.query(query, values);
-                client.release();
-            }
-        }
-        else{ console.log('did not update') }
-        }
-    
-    //If status is 'All'
-    pool.query(query, (error, result) => {
-      if (error) {
-        console.error('Error executing query', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
-      }
-      
-      return res.status(200).json(result.rows);
-    });
+    if(status && status !== 'All') {  
+        pool.query(query,values, (error, result) => {
+            const failureMessage = res.status(500).json({ message: 'Internal Server Error' }); 
+            const successMessage = res.status(200).json(result.rows);
+
+            if (error) { 
+                console.log(error)
+                return failureMessage };
+            return successMessage;
+          });
+    }     
 };
 
 //----------Routes----------------------------//
 app.post('/', (req, res, next) => {RootLink.RootLink(req, res, next)});
-app.post('/database', fetchDataHandler);
+app.get('/database', fetchDataHandler);
+app.put('/updateStatus', (req, res)=> {UpdateLink.UpdateLink(req, res)});
 app.delete('/delete', (req, res) => {
     const {id} =req.body;
     DeleteLink(res, id) });
