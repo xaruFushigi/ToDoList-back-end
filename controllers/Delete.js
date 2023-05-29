@@ -1,27 +1,30 @@
 //---------importing dependecies-----------------------//
-const { session } = require('passport');
-const { express, 
-        expressSession,
-        app,
-        dotenv,
-        db,
-        cors,
-        cookieParser,
-        cookieSession,
-        csrf,
-        pool,
-        sessionStore,
-        pgSession,
-        csrfProtection } = require('../dependencies');
+const { session } = require("passport");
+const {
+  express,
+  expressSession,
+  app,
+  dotenv,
+  db,
+  cors,
+  cookieParser,
+  cookieSession,
+  csrf,
+  pool,
+  sessionStore,
+  pgSession,
+  csrfProtection,
+} = require("../dependencies");
 //---------END OF importing dependecies------------------//
 
 const DeleteLink = (res, id) => {
-
-
-    pool.query('DELETE FROM todolist WHERE id = $1', [id], (error, result) => {
-        if(error) return res.status(500).json({ message: 'Error occurred while deleting' }); 
-        else{ return res.status(200).json({message: 'has been deleted'}); }
-    } )
+  pool.query("DELETE FROM todolist WHERE id = $1", [id], (error, result) => {
+    if (error)
+      return res.status(500).json({ message: "Error occurred while deleting" });
+    else {
+      return res.status(200).json({ message: "has been deleted" });
+    }
+  });
 };
 
-module.exports = {DeleteLink};
+module.exports = DeleteLink;

@@ -18,17 +18,15 @@ const {
 //---------END OF importing dependecies------------------//
 
 const ReadDatabase = (req, res) => {
-  const { status } = req.query; // status of the main window option value
-
-  let query = "SELECT * FROM todolist";
+  const { status, orderBy } = req.query; // status of the main window option value
+  let query = "SELECT * FROM todolist ORDER BY dateoftask ASC";
   let values = [];
 
   // If status is provided and not equal to 'All'
   if (status && status !== "All") {
-    query = "SELECT * FROM todolist WHERE status = $1";
+    query = "SELECT * FROM todolist WHERE status = $1 ORDER BY dateoftask ASC";
     values = [status];
   }
-
   pool.query(query, values, (error, result) => {
     if (error) {
       console.error(error);
