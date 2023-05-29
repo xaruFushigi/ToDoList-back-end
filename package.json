@@ -27,5 +27,10 @@
   "devDependencies": {
     "nodemon": "^2.0.22"
   },
-  "proxy": "http://localhost:3050/"
+  "proxy": "http://localhost:3050/",
+  "scripts": {
+    "dev": "webpack --config=Scripts/config/webpack.dev.js --watch",
+    "build": "webpack --config=Scripts/config/webpack.prod.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
