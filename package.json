@@ -1,4 +1,6 @@
 {
+  "name": "ToDoList-back-end",
+  "version": "0.1.0",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "connect-pg-simple": "^8.0.0",
@@ -29,6 +31,21 @@
   },
   "proxy": "http://localhost:3050/",
   "scripts": {
-    "serv": "nodemon server.js"
+    "serv": "nodemon server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
