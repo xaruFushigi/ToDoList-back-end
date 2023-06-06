@@ -48,7 +48,7 @@ app.use(
     name: "session_cookie",
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === "production" ? "true" : "auto",
+      secure: process.env.NODE_ENV === "production" ? true : "auto",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       httpOnly: true,
       resave: false,
@@ -56,15 +56,7 @@ app.use(
     },
   })
 );
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); // This will allow requests from all domains. You can set it to a specific domain as well.
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
+app.set("trust proxy", true);
 //---------END OF Middlewear------------------//
 
 //----------Routes----------------------------//
