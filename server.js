@@ -67,8 +67,8 @@ app.delete("/delete", (req, res) => {
   DeleteLink(res, id);
 });
 //----------END OF Routes---------------------//
-
+const port = process.env.PORT || 3000;
 //Start of server
-app.listen(`${process.env.PORT}` || 3000, () => {
+app.listen(port, () => {
   console.log(`app is running in port ${process.env.PORT}`);
 });
