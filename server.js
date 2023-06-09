@@ -3,16 +3,9 @@ const {
   express,
   expressSession,
   app,
-  dotenv,
-  db,
-  pool,
   cors,
   cookieParser,
-  cookieSession,
-  csrf,
   sessionStore,
-  pgSession,
-  csrfProtection,
 } = require("./dependencies");
 //---------END OF importing dependecies------------------//
 

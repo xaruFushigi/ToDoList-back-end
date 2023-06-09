@@ -1,20 +1,5 @@
 //---------importing dependecies-----------------------//
-const { session } = require("passport");
-const {
-  express,
-  expressSession,
-  app,
-  dotenv,
-  db,
-  cors,
-  cookieParser,
-  cookieSession,
-  csrf,
-  pool,
-  sessionStore,
-  pgSession,
-  csrfProtection,
-} = require("../dependencies");
+const { pool } = require("../dependencies");
 //---------END OF importing dependecies------------------//
 
 const ReadDatabase = (req, res) => {

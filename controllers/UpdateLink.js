@@ -1,18 +1,4 @@
-const {
-  express,
-  expressSession,
-  app,
-  dotenv,
-  db,
-  pool,
-  cors,
-  cookieParser,
-  cookieSession,
-  csrf,
-  sessionStore,
-  pgSession,
-  csrfProtection,
-} = require("../dependencies");
+const { pool } = require("../dependencies");
 
 const UpdateLink = async (req, res) => {
   const id = req.params.id; // Retrieve the task ID from URL parameter
