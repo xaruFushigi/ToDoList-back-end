@@ -68,6 +68,6 @@ app.delete("/delete", (req, res) => {
 });
 //----------END OF Routes---------------------//
 //Start of server
-// app.listen(process.env.PORT, () => {
-//   console.log(`app is running in port ${process.env.PORT}`);
-// });
+app.listen(process.env.PORT, () => {
+  console.log(`app is running in port ${process.env.PORT}`);
+});
